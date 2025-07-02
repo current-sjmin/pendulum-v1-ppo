@@ -60,6 +60,8 @@ def main():
                 
                 if best_reward < total_reward:
                     best_reward = total_reward
+                    torch.save(actor.state_dict(), f"results/models/best_actor_{curr_episode:05}.pth")
+                    torch.save(actor.state_dict(), f"results/models/best_critic_{curr_episode:05}.pth")
                 
                 total_reward = 0
 
