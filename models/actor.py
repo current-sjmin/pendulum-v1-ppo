@@ -18,12 +18,8 @@ class Actor(nn.Module):
     
     def sample_action(self, mu, std):
         dist = torch.distributions.Normal(mu, std)
-        raw_action = dist.sample()
-        squashed_action = torch.tanh(raw_action) * 2.0  # [-1,1] → [-2,2]
-
-        log_prob = dist.log_prob(raw_action).sum()
+        action_tensor = dist.sample()
+        action = action_tensor.cpu().detach().numpy()
+        log_prob = dist.log_prob(action_tensor).sum()
         log_prob = log_prob.unsqueeze(0).cpu().detach().numpy()
-        
-        raw_action = raw_action.cpu().detach().numpy()
-        squashed_action = squashed_action.cpu().detach().numpy()
-        return raw_action, squashed_action, log_prob
+        return action, log_prob

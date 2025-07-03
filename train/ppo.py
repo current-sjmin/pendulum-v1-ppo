@@ -1,11 +1,10 @@
 import torch
 import torch.nn as nn
 
-def train_ppo(states, raw_actions, squashed_actions, log_probs, advantages, returns,
+def train_ppo(states, actions, log_probs, advantages, returns,
               actor, actor_optim, critic, critic_optim, device):
     states_tensor = torch.FloatTensor(states).to(device)
-    raw_actions_tensor = torch.FloatTensor(raw_actions).to(device)
-    squashed_actions_tensor = torch.FloatTensor(squashed_actions).to(device)
+    actions_tensor = torch.FloatTensor(actions).to(device)
     log_probs_tensor = torch.FloatTensor(log_probs).to(device)
     advantages_tensor = torch.FloatTensor(advantages).to(device)
     returns_tensor = torch.FloatTensor(returns).to(device)
@@ -14,7 +13,7 @@ def train_ppo(states, raw_actions, squashed_actions, log_probs, advantages, retu
         mean, std = actor(states_tensor)
 
         dist = torch.distributions.Normal(mean, std)
-        new_log_probs = dist.log_prob(raw_actions_tensor).sum(axis=-1)
+        new_log_probs = dist.log_prob(actions_tensor).sum(axis=-1)
         ratio = torch.exp(new_log_probs - log_probs_tensor)
 
         clip_exp = 0.2

@@ -32,23 +32,24 @@ def main():
         truncated = False
         total_reward = 0
 
+        # 최신 데이터 축적
         for t in range(config.T_HORIZON):
             state_tensor = torch.FloatTensor(state).to(device)
 
             # Actor
             mu, std = actor(state_tensor)
-            raw_action, squashed_action, log_prob = actor.sample_action(mu, std)
+            action, log_prob = actor.sample_action(mu, std)
 
             # Critic
             value_tensor = critic(state_tensor)            
             value = critic.get_value(value_tensor)
 
-            next_state, reward, done, truncated, info = env.step(squashed_action)
+            next_state, reward, done, truncated, info = env.step(action)
             episode_done = done or truncated
 
             # Stack Buffer
-            rollout_buffer.add(state, raw_action, squashed_action, reward,
-                               episode_done, value, log_prob)
+            rollout_buffer.add(state, action, reward, episode_done,
+                               value, log_prob)
             
             state = next_state
             total_reward += reward
@@ -82,13 +83,12 @@ def main():
         # Get Train Data in Buffer
         train_data = rollout_buffer.get()
         states = train_data["states"]
-        raw_actions = train_data["raw_actions"]
-        squashed_actions = train_data["squashed_actions"]
+        actions = train_data["actions"]
         log_probs = train_data["log_probs"]
 
 
         # Update the PPO
-        train_ppo(states, raw_actions, squashed_actions, log_probs, advantages, returns,
+        train_ppo(states, actions, log_probs, advantages, returns,
                   actor, actor_optim, critic, critic_optim, device)
         rollout_buffer.clear()
 
