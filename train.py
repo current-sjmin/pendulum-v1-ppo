@@ -1,5 +1,5 @@
 import gymnasium as gym
-import torch
+import torch, math
 import config
 from models import Actor, Critic
 from buffer import RolloutBuffer
@@ -24,6 +24,7 @@ def main():
 
     buffer = RolloutBuffer()
 
+    best_reward = float(-math.inf)
     avg_rewards, avg_actor_losses, avg_critic_losses, avg_advantages = [], [], [], []
     pbar = tqdm(range(config.MAX_UPDATES), desc="Training", dynamic_ncols=True)
     for update in pbar:
@@ -39,6 +40,10 @@ def main():
         avg_advantages.append(avg_advantage)
 
         pbar.set_description(f"Update {update+1} | Reward: {avg_reward:.2f}")
+        if best_reward < avg_reward:
+            torch.save(actor.state_dict(), f"{config.MODEL_DIR}/best_actor.pth")
+            torch.save(critic.state_dict(), f"{config.MODEL_DIR}/best_critic.pth")
+            best_reward = avg_reward
         save_model(actor, critic, update, config.MODEL_DIR)
         visualize_result(avg_rewards, avg_actor_losses, avg_critic_losses, avg_advantages, config.RESULT_DIR)
 
