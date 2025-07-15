@@ -9,6 +9,10 @@ from utils import save_model, visualize_result
 from tqdm import tqdm
 
 
+def entropy_linear_schedule(start, end, t, T):
+    return start + (end - start) * (t / T)
+
+
 def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Use the {device}.")
@@ -38,6 +42,9 @@ def main():
         avg_actor_losses.append(avg_actor_loss)
         avg_critic_losses.append(avg_critic_loss)
         avg_advantages.append(avg_advantage)
+
+        config.ENTROPY_COEF = entropy_linear_schedule(config.ENTROPY_COEF, config.MIN_ENTROPY_COEF,
+                                                      update, config.MAX_UPDATES)
 
         pbar.set_description(f"Update {update+1} | Reward: {avg_reward:.2f}")
         if best_reward < avg_reward:

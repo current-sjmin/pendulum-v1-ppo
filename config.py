@@ -18,6 +18,7 @@ HIDDEN_DIM = 64
 ACTION_BOUND = 2.0
 
 ENTROPY_COEF = 5e-3
+MIN_ENTROPY_COEF = 1e-4
 
 MODEL_DIR = "results/models"
 RESULT_DIR = "results/visualize"
