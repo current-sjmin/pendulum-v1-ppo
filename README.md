@@ -53,13 +53,13 @@ python test.py
 다른 모델을 사용하고 싶다면, 실행 시 아래와 같이 인자를 전달할 수 있습니다:
 
 ```bash
-python test.py --model saved_models/your_model.pt
+python test.py
 ```
 
-또는
+기본적으로 `test` 모듈은 첫번째 pth 파일을 자동으로 로드합니다.
+다른 모델을 사용하고 싶다면, 실행 시 아래와 같이 인자를 전달할 수 있습니다:
 
 ```bash
-python test.py -m saved_models/your_model.pt
+python test.py -e 500
 ```
-
-`-m` 또는 `--model` 옵션을 통해 원하는 모델을 자유롭게 지정할 수 있습니다.
+에피소드의 수 옵션을 이용하여 해당 pth 파일을 로드할 수 있습니다.
