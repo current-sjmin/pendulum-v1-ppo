@@ -36,11 +36,11 @@ def main():
         avg_rewards.append(avg_reward)
         avg_actor_losses.append(avg_actor_loss)
         avg_critic_losses.append(avg_critic_loss)
-        avg_advantages.append(avg_reward)
+        avg_advantages.append(avg_advantage)
 
         pbar.set_description(f"Update {update+1} | Reward: {avg_reward:.2f}")
         save_model(actor, critic, update, config.MODEL_DIR)
-        visualize_result(avg_advantages, avg_actor_losses, avg_critic_losses, avg_advantages, config.RESULT_DIR)
+        visualize_result(avg_rewards, avg_actor_losses, avg_critic_losses, avg_advantages, config.RESULT_DIR)
 
 if __name__ == "__main__":
     main()
