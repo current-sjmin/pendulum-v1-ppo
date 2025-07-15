@@ -20,6 +20,7 @@ class Actor(nn.Module):
 
         mu = torch.tanh(self.mu_head(x)) * self.action_bound
         log_std = self.log_std_head(x)
+        log_std = torch.clamp(log_std, min=-20, max=2)
         std = torch.exp(log_std)
 
         return mu, std

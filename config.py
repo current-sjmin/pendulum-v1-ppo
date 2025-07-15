@@ -9,7 +9,7 @@ VALUE_COEF = 0.5
 PPO_EPOCHS = 10
 BATCH_SIZE = 64
 
-ACTOR_LR = 3e-4
+ACTOR_LR = 1e-4
 CRITIC_LR = 1e-3
 
 STATE_DIM = 3
@@ -17,7 +17,7 @@ ACTION_DIM = 1
 HIDDEN_DIM = 64
 ACTION_BOUND = 2.0
 
-ENTROPY_COEF = 1e-2
+ENTROPY_COEF = 5e-3
 
 MODEL_DIR = "results/models"
 RESULT_DIR = "results/visualize"
